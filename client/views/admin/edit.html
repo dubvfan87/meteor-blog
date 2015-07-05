@@ -1,13 +1,13 @@
 <template name="blogAdminEdit">
-  {{> notifications}}
   <div id="blog-admin">
     <div class="container blog-admin-edit">
       <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <h1>
-            <strong>Edit Post</strong>
+        <div class="col-md-12">
+          <h1 class="page-title">
+            <i class="fa fa-lg fa-fw fa-edit"></i>
+            Edit Post
           </h1>
-
+          <hr>
           {{#with post}}
             <form>
               <div class="row form-group">
@@ -18,7 +18,7 @@
                 <div class="col-md-3">
                 <label for="featured-image">Featured Image</label>
                   <input type="file" id="input-featured-image" name="featured-image" class="hidden">
-                  <label class="btn btn-info" for="input-featured-image">
+                  <label class="btn btn-info" for="input-featured-image" {{fileUploadReady}}>
                     {{#if featuredImage}}
                       {{featuredImageName}}
                     {{else}}
@@ -51,13 +51,12 @@
               <div class="row form-group">
                 <div class="col-md-12">
                   <label>Body</label>
-                  <div class="edit-mode">
-                    <a href="#" class="selected visual-toggle">Visual</a>
-                    -
-                    <a href="#" class="html-toggle">HTML</a>
-                  </div>
-                  <textarea hidden class="html-editor col-xs-12"></textarea>
-                  <div class="editable" tabindex="3"></div>
+                  <!--textarea class="col-xs-12"></textarea-->
+                  {{> froalaReactive buttons=froalaButtons height=300 theme="dark" inlineMode=false}}
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-md-12">
                   <button type="submit" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                   </button>

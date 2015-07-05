@@ -1,8 +1,8 @@
 Package.describe({
   summary: "A package that provides a blog at /blog",
-  version: "0.7.0",
-  name: "ryw:blog",
-  git: "https://github.com/Differential/meteor-blog.git"
+  version: "1.0.0",
+  name: "dubvfan87:blog",
+  git: "https://github.com/dubvfan87/meteor-blog.git"
 });
 
 Package.onUse(function(api) {
@@ -18,9 +18,12 @@ Package.onUse(function(api) {
     'ui',
     'less',
     'underscore',
-    'aslagle:reactive-table@0.5.5',
-    'lovetostrike:shareit@0.4.1',
-    'gfk:notifications@1.0.11'
+    'aslagle:reactive-table',
+    'juliancwirko:s-alert',
+    'juliancwirko:s-alert-stackslide',
+    'froala:editor',
+    'froala:editor-reactive',
+    'socialize:commentable'
   ], 'client');
 
   // FILES FOR CLIENT
@@ -28,28 +31,13 @@ Package.onUse(function(api) {
   api.addFiles([
 
     // STYLESHEETS
-    'client/stylesheets/lib/side-comments/side-comments.css',
-    'client/stylesheets/lib/side-comments/default.css',
-    'client/stylesheets/lib/medium-editor.css',
-    'client/stylesheets/lib/medium-themes/bootstrap.css',
-    'client/compatibility/bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.css',
     'client/stylesheets/lib/bootstrap-tagsinput.css',
 
     // JAVASCRIPT LIBS
     'client/boot.coffee',
-    'client/compatibility/side-comments.js',
-    'client/compatibility/medium-editor.js',
-    'client/compatibility/bower_components/handlebars/handlebars.runtime.js',
-    'client/compatibility/handlebars.noconflict.js',
-    'client/compatibility/bower_components/jquery-sortable/source/js/jquery-sortable.js',
-    'client/compatibility/bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-    'client/compatibility/bower_components/blueimp-file-upload/js/jquery.iframe-transport.js',
-    'client/compatibility/bower_components/blueimp-file-upload/js/jquery.fileupload.js',
-    'client/compatibility/bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.js',
     'client/compatibility/bootstrap-tagsinput.js',
     'client/compatibility/typeahead.jquery.js',
     'client/compatibility/beautify-html.js',
-    'client/compatibility/highlight.pack.js',
 
     // PACKAGE FILES
     'client/views/404.html',
@@ -59,7 +47,6 @@ Package.onUse(function(api) {
     'client/views/admin/admin.html',
     'client/views/admin/admin.coffee',
     'client/views/admin/edit.html',
-    'client/views/admin/editor.coffee',
     'client/views/admin/edit.coffee',
     'client/views/blog/blog.less',
     'client/views/blog/blog.html',
@@ -85,13 +72,12 @@ Package.onUse(function(api) {
   api.addFiles([
     'collections/config.coffee',
     'server/boot.coffee',
-    'server/rss.coffee',
     'server/publications.coffee'
   ], 'server');
 
   // PACKAGES FOR SERVER
 
-  Npm.depends({ rss: '0.0.4' });
+  //Npm.depends({ rss: '0.0.4' });
 
   // PACKAGES FOR SERVER AND CLIENT
 
@@ -102,7 +88,7 @@ Package.onUse(function(api) {
     'iron:location@1.0.0',
     'accounts-base',
     'kaptron:minimongoid@0.9.1',
-    'mrt:moment@2.8.1',
+    'momentjs:moment',
     'vsivsi:file-collection@1.1.0',
     'alanning:roles@1.2.13',
     'meteorhacks:fast-render@2.0.2',
@@ -125,12 +111,8 @@ Package.onUse(function(api) {
 });
 
 Package.onTest(function (api) {
-  api.use("ryw:blog", ['client', 'server']);
+  api.use("dubvfan87:blog", ['client', 'server']);
   api.use('tinytest', ['client', 'server']);
   api.use('test-helpers', ['client', 'server']);
   api.use('coffeescript', ['client', 'server']);
-
-  Npm.depends({ rss: '0.0.4' });
-
-  api.addFiles('test/server/rss.coffee', 'server');
 });

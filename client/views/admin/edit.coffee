@@ -1,6 +1,5 @@
 ## METHODS
 
-
 # Return current post if we are editing one, or empty object if this is a new
 # post that has not been saved yet.
 getPost = (id) ->
@@ -40,41 +39,14 @@ substringMatcher = (strs) ->
 
     cb matches
 
-# Toggle between visual and HTML mode
-setEditMode = (tpl, mode) ->
-  tpl.$('.editable').toggle()
-  tpl.$('.html-editor').toggle()
-  tpl.$('.edit-mode a').removeClass 'selected'
-  tpl.$(".#{mode}-toggle").addClass 'selected'
-
 # Save
 save = (tpl, cb) ->
   $form = tpl.$('form')
-  $editable = $('.editable', $form)
-  editor = BlogEditor.make tpl
 
-  # Make paragraphs commentable
-  # remove duplicates
-  $editable.find('p[data-section-id]').each ->
-    sec_id = $(this).attr 'data-section-id'
-    if $editable.find("p[data-section-id=#{sec_id}]").length > 1
-      $editable.find("p[data-section-id=#{sec_id}]:gt(0)").removeAttr 'data-section-id'
-  # decorate
-  i = $editable.find('p[data-section-id]').length + 1
-  $editable.find('p:not([data-section-id])').each ->
-    $(this).addClass('commentable-section').attr('data-section-id', i)
-    i++
+  body = tpl.$('.froala-reactive-meteorized').editable('getHTML')
 
-  # Highlight code blocks
-  editor.highlightSyntax()
-
-  if $editable.is(':visible')
-    body = editor.contents()
-  else
-    body = $('.html-editor', $form).val().trim()
-
-  if not body
-    return cb(null, new Error 'Blog body is required')
+  #if not body
+  #  return cb(null, new Error 'Blog body is required')
 
   slug = $('[name=slug]', $form).val()
   description = $('[name=description]', $form).val()
@@ -124,8 +96,7 @@ Template.blogAdminEdit.rendered = ->
       ranOnce = true
       post = getPost( Session.get('postId') )
       if post?.body
-        @$('.editable').html post.body
-        @$('.html-editor').html post.body
+        @$('.froala-reactive-meteorized').editable('setHTML', post.body, false)
 
       # Tags
       $tags = @$('[data-role=tagsinput]')
@@ -141,46 +112,15 @@ Template.blogAdminEdit.rendered = ->
         $tags.tagsinput 'add', datum.val
         $tags.tagsinput('input').typeahead 'val', ''
 
-      # Medium editor
-      BlogEditor.make @
-
-Template.blogAdminEdit.helpers
-  post: ->
-    getPost( Session.get('postId') )
-
-Template.blogAdminEdit.events
-  # Toggle between VISUAL/HTML modes
-  'click .visual-toggle': (e, tpl) ->
-    if tpl.$('.editable').is(':visible')
-      return
-
-    BlogEditor.make(tpl).highlightSyntax()
-    setEditMode tpl, 'visual'
-
-  'click .html-toggle': (e, tpl) ->
-    $editable = tpl.$('.editable')
-    $html = tpl.$('.html-editor')
-    if $html.is(':visible')
-      return
-
-    if $editable.find('.medium-insert-images').length is 0
-      $html.val BlogEditor.make(tpl).pretty()
-    setEditMode tpl, 'html'
-    $html.height($editable.height())
-
-  # Copy HTML content to visual editor and autosize height
-  'keyup .html-editor': (e, tpl) ->
-    $editable = tpl.$('.editable')
-    $html = tpl.$('.html-editor')
-
-    $editable.html($html.val()?.trim())
-    $html.height($editable.height())
-
-  # Autosave
-  'input .editable, keydown .editable, keydown .html-editor': _.debounce (e, tpl) ->
-    save tpl, (id, err) ->
+  # Auto save
+  @$('.froala-reactive-meteorized').on 'editable.contentChanged', (e, editor) =>
+    save @, (id, err) ->
       if err
-        return Notifications.error '', err.message
+        sAlert.error
+          sAlertIcon: 'times-circle'
+          sAlertTitle: 'Error'
+          message: err.message
+        return
 
       if id
         # If new blog post, subscribe to the new post and update URL
@@ -188,8 +128,43 @@ Template.blogAdminEdit.events
         path = Router.path 'blogAdminEdit', id: id
         Iron.Location.go path, { replaceState: true, skipReactive: true }
 
-      Notifications.success '', 'Saved'
-  , 8000
+      sAlert.success
+        sAlertIcon: 'check-circle'
+        sAlertTitle: 'Success'
+        message: 'Autosaved',
+        stack: false,
+        timeout: 1000
+
+
+
+Template.blogAdminEdit.helpers
+  post: ->
+    getPost( Session.get('postId') )
+
+  fileUploadReady: ->
+    post = getPost( Session.get('postId') )
+    if post?._id
+      return ''
+    return 'disabled'
+
+  froalaButtons: ->
+    return [
+        'bold',
+        'italic', 
+        'underline',
+        'strikeThrough'
+        'formatBlock',
+        'insertOrderedList',
+        'insertUnorderedList',
+        'table',
+        'insertImage',
+        'insertVideo',
+        'createLink',
+        'fullscreen',
+        'html'
+      ]
+
+Template.blogAdminEdit.events
 
   'blur [name=title]': (e, tpl) ->
     slug = tpl.$('[name=slug]')
@@ -242,7 +217,10 @@ Template.blogAdminEdit.events
           if post.id?
             post.update
               featuredImage: "/fs/#{id}"
-            Notifications.success '', 'Featured image saved!'
+            saAlert.success
+              sAlertIcon: 'check-circle'
+              sAlertTitle: 'Success'
+              message: 'Featured image saved!'
 
   'change [name=background-title]': (e, tpl) ->
     $checkbox = $(e.currentTarget)
@@ -253,5 +231,8 @@ Template.blogAdminEdit.events
     e.preventDefault()
     save tpl, (id, err) ->
       if err
-        return Notifications.error '', err.message
+        return sAlert.error
+          sAlertIcon: 'times-circle'
+          sAlertTitle: 'Error'
+          message: err.message
       Router.go 'blogAdmin'

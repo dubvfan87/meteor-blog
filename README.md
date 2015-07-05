@@ -4,37 +4,24 @@ This Meteor package gives you a basic, out-of-the-box blog at `/blog`. We wanted
 a way to add a blog to an existing app without running another dyno or server
 for a meteor-based blog.
 
-This blog is very much a work in progress. To help decide what gets add next,
-vote with your [Github issues](https://github.com/Differential/meteor-blog/issues)!
-
-## Example App
-You can view an example application [here](https://github.com/Differential/example-blog-app) or view it live (without customization) at [blog-example.meteor.com](http://blog-example.meteor.com)
-
 ### Features
 
-* Medium-style editor
+* Froala editor
 * Slug-based URLs (editable)
 * Add blog post images (store in database or upload to S3)
 * Add featured, "hero" image for a post
-* Support DISQUS comments
+* Support socialize:commentable comments
 * Blog post tags and tag view
 * Widget to embed recent posts on another (e.g. home) page
 * Customizable templates
-* SEO best practices (OpenGraph, Twitter Cards, share buttons, Google+ author attribution)
 * Autosave
 * Pagination
-* Code syntax highlighting
 * Multiple roles (admin/author)
-* RSS feed
-
-### Roadmap
-
-* Check out the [enhancements tracker](https://github.com/Differential/meteor-blog/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)
 
 ### Quick Start
 
 ```bash
-$ meteor add ryw:blog
+$ meteor add dubvfan87:blog
 ```
 
 You will get routes for:
@@ -85,60 +72,9 @@ add these roles somehow:
 
 ### Comments
 
-**DISQUS**
+**Socialize Commentable**
 
-This package supports [DISQUS](http://disqus.com) comments. Configure your
-DISQUS short name in the client and comments will render below all your blog
-posts. If you use your own `blogShowTemplate` template, include `{{> disqus this}}` to
-display comments.
 
-```coffee
-# CoffeeScript
-if Meteor.isClient
-  Blog.config
-    comments:
-      disqusShortname: 'myshortname'
-```
-
-```javascript
-// JavaScript
-if (Meteor.isClient) {
-  Blog.config({
-    comments: {
-      disqusShortname: 'myshortname'
-    }
-  });
-}
-```
-
-**SideComments.js**
-
-This package has experimental integration with [SideComments.js](http://aroc.github.io/side-comments-demo/).
-Enable side comments in your blog settings. Currently, side comments uses the
-Meteor accounts for your Meteor site as comment users, which is probably not
-what you want. You can also allow anonymous comments, which lets anyone type in
-anything without even a name. Also, probably not what you want.
-
-```coffee
-# CoffeeScript
-if Meteor.isClient
-  Blog.config
-    comments:
-      useSideComments: true # default is false
-      allowAnonymous: true # default is false
-```
-
-```javascript
-// JavaScript
-if (Meteor.isClient) {
-  Blog.config({
-    comments: {
-      useSideComments: true,
-      allowAnonymous: true
-    }
-  });
-}
-```
 
 ### Bootstrap Templates
 
@@ -147,7 +83,7 @@ templates. If you use these default templates, you must add the meteor
 `bootstrap-3` package.
 
 ```bash
-$ meteor add mrt:bootstrap-3
+$ meteor add mizzao:bootstrap-3
 ```
 
 ### Custom Templates
@@ -313,37 +249,6 @@ if (Meteor.isClient) {
 The default `blogIndexTemplate` template displays a `Load More` button. If you
 use your own template, include the `{{blogPager}}` helper to display the button.
 
-### Code Highlighting
-
-If you fancy a coding blog, the blog package supports syntax highlighting using
-[highlight.js](http://highlightjs.org/). If enabled, any content within `<pre>`
-tags will get modified for syntax highlighting. You can specify any
-[`highlight.js` style file](https://github.com/isagalaev/highlight.js/tree/master/src/styles).
-Example config:
-
-```coffee
-# CoffeeScript
-if Meteor.isClient
-  Blog.config
-    syntaxHighlighting: true # default is false
-    syntaxHighlightingTheme: 'atelier-dune.dark' # default is 'github'
-```
-```javascript
-// JavaScript
-if (Meteor.isClient) {
-  Blog.config({
-    syntaxHighlighting: true,
-    syntaxHighlightingTheme: 'atelier-dune.dark'
-  });
-}
-```
-
-### Social Sharing
-
-This package depends on the [`lovetostrike:shareit` package](https://atmospherejs.com/lovetostrike/shareit)
-for powering social sharing.  If you use your own `blogShowTemplate` template,
-include `{{> shareit}}` to display share buttons.
-
 ### Recent Posts Helper
 
 You can include a basic snippet of HTML displaying recent blog posts (e.g. on
@@ -361,37 +266,3 @@ Or you can specify the # of posts to show:
 ```
 
 There are classes in the template for styling.
-
-### RSS
-
-An RSS feed is automatically generated at `/rss/posts`. To set the title and
-description in the feed, configure RSS:
-
-```coffee
-# CoffeeScript
-if Meteor.isServer
-  Blog.config
-    rss:
-      title: 'My blog title'
-      description: 'My blog description'
-```
-
-```javascript
-// JavaScript
-if (Meteor.isServer) {
-  Blog.config({
-    rss: {
-      title: 'My blog title',
-      description: 'My blog description'
-    }
-  });
-}
-```
-
-Add a head tag somewhere in your `.html` files so your RSS feed can be discovered:
-
-```html
-<head>
-  <link rel="alternate" type="application/rss+xml" title="My blog title" href="/rss/posts">
-</head>
-```
