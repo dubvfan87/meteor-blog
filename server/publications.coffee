@@ -3,10 +3,12 @@
 # Public Publications
 #
 
+###
 Meteor.publish 'commentsBySlug', (slug) ->
   check slug, String
 
   Comment.find slug: slug
+###
 
 Meteor.publish 'singlePostBySlug', (slug) ->
   check slug, String

@@ -1,5 +1,5 @@
 Package.describe({
-  summary: "A package that provides a blog at /blog",
+  summary: "A package that provides a simple blog at /blog and admin interface at /admin/blog",
   version: "1.0.0",
   name: "dubvfan87:blog",
   git: "https://github.com/dubvfan87/meteor-blog.git"
@@ -18,7 +18,7 @@ Package.onUse(function(api) {
     'ui',
     'less',
     'underscore',
-    'aslagle:reactive-table',
+    'aslagle:reactive-table@0.5.5',
     'juliancwirko:s-alert',
     'juliancwirko:s-alert-stackslide',
     'froala:editor',
@@ -95,7 +95,11 @@ Package.onUse(function(api) {
     'meteorhacks:subs-manager@1.2.0',
     'cfs:standard-packages@0.5.3',
     'cfs:filesystem@0.1.1',
-    'cfs:s3@0.1.1'
+    'cfs:s3@0.1.1',
+    'jparker:crypto-core',
+    'jparker:crypto-sha256',
+    'jparker:crypto-hmac',
+    'jparker:crypto-base64'
   ], both);
 
   // FILES FOR SERVER AND CLIENT

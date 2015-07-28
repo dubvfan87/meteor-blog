@@ -112,6 +112,9 @@ Template.blogAdminEdit.rendered = ->
         $tags.tagsinput 'add', datum.val
         $tags.tagsinput('input').typeahead 'val', ''
 
+  imageUploadToS3 = $('.froala-reactive-meteorized').editable('option', 'imageUploadToS3');
+  console.log imageUploadToS3
+
   # Auto save
   @$('.froala-reactive-meteorized').on 'editable.contentChanged', (e, editor) =>
     save @, (id, err) ->
@@ -163,6 +166,42 @@ Template.blogAdminEdit.helpers
         'fullscreen',
         'html'
       ]
+
+  froalaS3Config: ->
+    tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    policy = {
+      "expiration": tomorrow.toISOString()
+      "conditions": [
+        {"acl": Meteor.settings.public.blog.s3Config.acl},
+        {"bucket": Meteor.settings.public.blog.s3Config.bucket},
+        {"success_action_status": "201"},
+        {"x-requested-with": "xhr"},
+        ["starts-with", "$Content-Type", ''],
+        ["starts-with", "$key", "s3Imports/" ]
+      ]        
+    }
+
+    signature = CryptoJS.HmacSHA1(
+      CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(JSON.stringify(policy))),
+      Meteor.settings.public.blog.s3Config.secretAccessKey
+    ).toString(CryptoJS.enc.Base64)
+
+    return {
+      bucket: Meteor.settings.public.blog.s3Config.bucket
+      region: 's3',
+      keyStart: 's3Imports/'
+      callback: (url, key) ->
+        console.log url
+        console.log key
+      params:
+        acl: Meteor.settings.public.blog.s3Config.acl
+        AWSAccessKeyId: Meteor.settings.public.blog.s3Config.accessKey
+        policy: CryptoJS.enc.Base64.stringify(
+                  CryptoJS.enc.Utf8.parse(JSON.stringify(policy))
+                )
+        signature: signature
+    }
 
 Template.blogAdminEdit.events
 

@@ -1,3 +1,4 @@
+###
 class @Comment extends Minimongoid
 
   @_collection: new Meteor.Collection 'blog_comments'
@@ -14,3 +15,4 @@ Comment._collection.allow
     doc.comment.authorId == userId
   remove: (userId, doc) ->
     doc.comment.authorId == userId
+###

@@ -12,15 +12,6 @@ if Meteor.isClient
     Iron.Router.hooks.dataNotFound.call @
   , only: ['blogShow']
 
-# RSS
-
-Router.route '/rss/posts',
-  name: 'rss'
-  where: 'server'
-  action: ->
-    @response.write Meteor.call 'serveRSS'
-    @response.end()
-
 # BLOG INDEX
 
 Router.route '/blog',
@@ -90,7 +81,7 @@ Router.route '/blog/:slug',
     @render() if @ready()
   waitOn: -> [
     Meteor.subscribe 'singlePostBySlug', @params.slug
-    subs.subscribe 'commentsBySlug', @params.slug
+    #subs.subscribe 'commentsBySlug', @params.slug
     subs.subscribe 'authors'
   ]
   data: ->
