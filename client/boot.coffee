@@ -15,6 +15,7 @@ Blog =
     excerptFunction: null
     syntaxHighlighting: false
     syntaxHighlightingTheme: 'github'
+    cdnFontAwesome: true
     comments:
       allowAnonymous: false
       defaultImg: '/packages/blog/public/default-user.png'
@@ -37,6 +38,13 @@ Blog =
 
 
 Meteor.startup ->
+  if Blog.settings.cdnFontAwesome
+    # Load Font Awesome
+    $('<link>',
+      href: '//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css'
+      rel: 'stylesheet'
+    ).appendTo 'head'
+
   # Listen for any 'Load More' clicks
   $('body').on 'click', '.blog-load-more', (e) ->
     e.preventDefault()
