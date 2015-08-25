@@ -21,7 +21,7 @@ for a meteor-based blog.
 ### Quick Start
 
 ```bash
-$ meteor add dubvfan87:blog
+$ meteor add mattimo:blog
 ```
 
 You will get routes for:

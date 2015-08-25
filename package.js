@@ -1,6 +1,6 @@
 Package.describe({
   summary: "A package that provides a simple blog at /blog and admin interface at /admin/blog",
-  version: "1.0.0",
+  version: "0.7.1",
   name: "mattimo:blog",
   git: "https://github.com/dubvfan87/meteor-blog.git"
 });

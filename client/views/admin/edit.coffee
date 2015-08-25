@@ -113,10 +113,9 @@ Template.blogAdminEdit.rendered = ->
         $tags.tagsinput('input').typeahead 'val', ''
 
   imageUploadToS3 = $('.froala-reactive-meteorized').editable('option', 'imageUploadToS3');
-  console.log imageUploadToS3
 
   # Auto save
-  @$('.froala-reactive-meteorized').on 'editable.contentChanged', (e, editor) =>
+  @$('.froala-reactive-meteorized').on 'editable.contentChanged', _.debounce((e, editor) =>
     save @, (id, err) ->
       if err
         sAlert.error
@@ -137,6 +136,7 @@ Template.blogAdminEdit.rendered = ->
         message: 'Autosaved',
         stack: false,
         timeout: 1000
+  , 5000)
 
 
 
