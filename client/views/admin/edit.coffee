@@ -115,6 +115,7 @@ Template.blogAdminEdit.rendered = ->
   imageUploadToS3 = $('.froala-reactive-meteorized').editable('option', 'imageUploadToS3');
 
   # Auto save
+  ###
   @$('.froala-reactive-meteorized').on 'editable.contentChanged', _.debounce((e, editor) =>
     save @, (id, err) ->
       if err
@@ -137,6 +138,7 @@ Template.blogAdminEdit.rendered = ->
         stack: false,
         timeout: 1000
   , 5000)
+  ###
 
 
 

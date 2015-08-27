@@ -81,7 +81,7 @@ Router.route '/blog/:slug',
     @render() if @ready()
   waitOn: -> [
     Meteor.subscribe 'singlePostBySlug', @params.slug
-    #subs.subscribe 'commentsBySlug', @params.slug
+    subs.subscribe 'commentsBySlug', @params.slug
     subs.subscribe 'authors'
   ]
   data: ->

@@ -7,6 +7,11 @@ class @Post extends Minimongoid
     identifier: 'userId'
   ]
 
+  @has_many: [
+    name: 'comments'
+    foreign_key: 'postId'
+  ]
+
   @after_save: (post) ->
     post.tags = Post.splitTags post.tags
     post.excerpt = Post.excerpt post.body if post.body
@@ -79,6 +84,10 @@ class @Post extends Minimongoid
         return author.emails[0].address
 
     'Mystery blogger'
+
+  commentsSorted: (postId) ->
+    return Comment.find({ postId: postId }, { sort: createdAt: -1 })
+
 
 
 #

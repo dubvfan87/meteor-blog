@@ -22,8 +22,7 @@ Package.onUse(function(api) {
     'juliancwirko:s-alert',
     'juliancwirko:s-alert-stackslide',
     'froala:editor',
-    'froala:editor-reactive',
-    'socialize:commentable'
+    'froala:editor-reactive'
   ], 'client');
 
   // FILES FOR CLIENT

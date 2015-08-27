@@ -25,6 +25,11 @@ Meteor.publish 'posts', (limit) ->
     sort: publishedAt: -1
     limit: limit
 
+Meteor.publish 'commentsBySlug', (slug) ->
+  check slug, Match.OneOf(String, null)
+  post = Post.first slug: slug
+  Comment.find { postId: post._id }, { sort: createdAt: -1 }
+
 Meteor.publish 'taggedPosts', (tag) ->
   check tag, String
 
